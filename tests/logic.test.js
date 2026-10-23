@@ -1,0 +1,12 @@
+"use strict";
+const test=require("node:test");const assert=require("node:assert/strict");const L=require("../src/logic.js");
+const JD="We need an Operations Manager with team leadership, SQL, Excel and customer support experience. Python and dashboards required. Team leadership and reporting daily.";
+const RESUME="Alex Example\nalex@example.com +1 555 0100\nSummary\nOperations lead.\nExperience\n- Led a team of 40 agents and cut wait time by 25%\n- Built Excel reports and SQL dashboards\nEducation\nExample University\nSkills\nExcel, SQL, customer support";
+test("keyword extraction finds dictionary skills in the JD",()=>{const k=L.extractKeywords(JD).map(x=>x.term);assert.ok(k.includes("sql"));assert.ok(k.includes("team leadership"));assert.ok(k.includes("python"));});
+test("matching splits found and missing with normalisation",()=>{const m=L.matchKeywords(RESUME,[{term:"SQL"},{term:"python"},{term:"dashboards"}]);assert.ok(m.found.includes("SQL"));assert.ok(m.missing.includes("python"));assert.equal(m.total,3);});
+test("section checks detect present and missing sections",()=>{const s=L.checkSections(RESUME);assert.equal(s.experience,true);assert.equal(s.education,true);assert.equal(s.skills,true);});
+test("contact checks find email and phone",()=>{const c=L.checkContact(RESUME);assert.equal(c.email,true);assert.equal(c.phone,true);assert.equal(c.linkedin,false);});
+test("quantified bullets need a bullet plus a metric",()=>{const q=L.findQuantifiedBullets(RESUME);assert.equal(q.length,1);assert.ok(q[0].includes("25%"));});
+test("score breakdown returns categories, not one opaque number",()=>{const s=L.scoreBreakdown(RESUME,JD);assert.ok("keywords" in s.categories&&"sections" in s.categories&&"impact" in s.categories);assert.ok(s.keywords.coverage>0&&s.keywords.coverage<100);assert.ok(s.overall>=0&&s.overall<=100);});
+test("report markdown lists missing keywords",()=>{const r=L.buildReport(RESUME,JD);assert.ok(r.includes("## Missing keywords"));assert.ok(r.includes("python"));});
+test("normalisation handles plurals and case",()=>{assert.equal(L.normalizeTerm("Dashboards"),"dashboard");assert.equal(L.wordCount("one two  three"),3);});

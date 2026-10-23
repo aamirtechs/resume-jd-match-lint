@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Resume JD Match Lint: Free ATS resume checker that runs locally</title>
+<meta name="description" content="Free ATS resume checker that runs locally. Paste a resume and job description to see missing keywords, section and parseability checks and a transparent category score.">
+<meta name="keywords" content="ATS resume checker free, resume keyword checker job description, check resume ATS score no sign up, resume scanner match job posting">
+<meta name="author" content="Amir Hussain"><meta name="robots" content="index, follow">
+<link rel="canonical" href="https://aamirtechs.github.io/resume-jd-match-lint/"><link rel="icon" href="favicon.svg"><meta name="theme-color" content="#0b1f3a">
+<meta property="og:type" content="website"><meta property="og:title" content="Resume JD Match Lint"><meta property="og:description" content="Free ATS resume checker that runs locally. Paste a resume and job description to see missing keywords, section and parseability checks and a transparent category score."><meta property="og:url" content="https://aamirtechs.github.io/resume-jd-match-lint/">
+<meta name="twitter:card" content="summary"><meta name="twitter:title" content="Resume JD Match Lint"><meta name="twitter:description" content="Free ATS resume checker that runs locally. Paste a resume and job description to see missing keywords, section and parseability checks and a transparent category score.">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Plus+Jakarta+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#0b1f3a;--navy2:#122c50;--gold:#d4a72c;--ink:#16233a;--muted:#5a6a84;--line:#e3e9f2;--bg:#f6f8fb;--card:#ffffff}
+*{box-sizing:border-box} body{margin:0;font-family:'Plus Jakarta Sans',system-ui,sans-serif;color:var(--ink);background:var(--bg)}
+header{background:linear-gradient(135deg,var(--navy),var(--navy2));color:#fff;padding:40px 20px 30px;text-align:center}
+header h1{font-family:Sora,sans-serif;font-size:2.1rem;margin:0 0 10px} header h1 span{color:var(--gold)}
+header p{max-width:720px;margin:0 auto 14px;opacity:.92;line-height:1.55}
+.stats{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}.stats span{background:rgba(255,255,255,.12);padding:6px 12px;border-radius:999px;font-size:.85rem}
+main{max-width:960px;margin:0 auto;padding:24px 16px 40px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px;box-shadow:0 4px 18px rgba(11,31,58,.06)}
+label{font-weight:700;font-size:.9rem;display:block;margin:12px 0 5px}
+input,select,textarea{width:100%;padding:10px;border:1px solid var(--line);border-radius:8px;font:inherit}
+textarea{min-height:110px} .row{display:grid;grid-template-columns:1fr 1fr;gap:14px}@media(max-width:700px){.row{grid-template-columns:1fr}}
+.btn-run{background:var(--gold);color:#16233a;border:0;padding:12px 22px;border-radius:9px;font-weight:800;cursor:pointer;margin-top:16px}
+.btn-ghost{background:#fff;border:1px solid var(--line);padding:10px 16px;border-radius:9px;cursor:pointer;font-weight:700}
+pre{background:#0b1f3a;color:#eaf0fa;padding:14px;border-radius:10px;overflow:auto;white-space:pre-wrap;word-break:break-word;font-size:.85rem}
+.privacy{color:var(--muted);font-size:.9rem;margin-top:12px}
+section.features{background:#fff;border:1px solid var(--line);border-radius:14px;padding:20px 22px;margin-top:18px}
+footer{background:var(--navy);color:#dbe6f5;text-align:center;padding:26px 16px;line-height:1.6} footer a{color:var(--gold)}
+table{width:100%;border-collapse:collapse;font-size:.9rem} th,td{border-bottom:1px solid var(--line);padding:7px;text-align:left}
+</style>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"Resume JD Match Lint","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"author":{"@type":"Person","name":"Amir Hussain","url":"https://aamirtechs.com"},"url":"https://aamirtechs.github.io/resume-jd-match-lint/"}</script>
+</head><body><header><h1>Resume JD <span>Match</span> Lint</h1><p>Paste a resume and a job description and see, locally and transparently, which required keywords and sections are missing.</p><div class="stats"><span>Free</span><span>100% in your browser</span><span>No sign-up</span></div></header><main><div class="card">
+<label>Upload resume (PDF, DOCX or TXT, parsed locally)</label><input type="file" id="file" accept=".pdf,.docx,.txt">
+<label>Resume text</label><textarea id="resume" style="min-height:150px">Alex Example
+alex@example.com +1 555 0100
+Summary
+Operations lead.
+Experience
+- Led a team of 40 agents and cut wait time by 25%
+- Built Excel reports and SQL dashboards
+Education
+Example University
+Skills
+Excel, SQL, customer support</textarea>
+<label>Job description</label><textarea id="jd" style="min-height:150px">We need an Operations Manager with team leadership, SQL, Excel and customer support experience. Python and dashboards required. Team leadership and reporting daily.</textarea>
+<button class="btn-run" id="run">Check my match</button> <button class="btn-ghost" id="dl">Download report .md</button>
+<pre id="out">Your breakdown will appear here.</pre>
+<p class="privacy">Runs 100% in your browser. Your files never leave this device.</p></div>
+<section class="features"><h2>How it works</h2><ul><li>Paste text or upload PDF, DOCX or TXT, parsed locally with pdf.js and mammoth.</li><li>Keyword extraction from the job description using frequency plus a skills dictionary.</li><li>Parseability checks for sections, contact details, dates, quantified bullets and length.</li><li>A score breakdown by category with every rule visible, plus a Markdown report.</li></ul></section>
+<script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
+<script>if(typeof pdfjsLib!=="undefined"){pdfjsLib.GlobalWorkerOptions.workerSrc="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.worker.min.js";}</script>
+<script src="https://cdn.jsdelivr.net/npm/mammoth@1.6.0/mammoth.browser.min.js"></script>
+<script src="src/logic.js"></script>
+<script>
+var L=window.ResumeJdMatchLint;
+document.getElementById("file").onchange=async function(e){var f=e.target.files[0];if(!f)return;var ta=document.getElementById("resume");
+if(/\.txt$/i.test(f.name)){ta.value=await f.text();}
+else if(/\.docx$/i.test(f.name)&&typeof mammoth!=="undefined"){var r=await mammoth.extractRawText({arrayBuffer:await f.arrayBuffer()});ta.value=r.value;}
+else if(/\.pdf$/i.test(f.name)&&typeof pdfjsLib!=="undefined"){var pdf=await pdfjsLib.getDocument({data:await f.arrayBuffer()}).promise;var txt="";for(var i=1;i<=pdf.numPages;i++){var pg=await pdf.getPage(i);var tc=await pg.getTextContent();txt+=tc.items.map(function(x){return x.str;}).join(" ")+"\n";}ta.value=txt;}
+else alert("That file type needs its parser library, which is still loading.");};
+document.getElementById("run").onclick=function(){var r=document.getElementById("resume").value,j=document.getElementById("jd").value;var s=L.scoreBreakdown(r,j);
+document.getElementById("out").textContent="Overall: "+s.overall+"/100  Words: "+s.wordCount+"\nCategories: "+Object.keys(s.categories).map(function(k){return k+" "+s.categories[k];}).join(" | ")+"\n\nFound: "+(s.keywords.found.join(", ")||"none")+"\nMissing: "+(s.keywords.missing.join(", ")||"none")+"\nQuantified bullets: "+s.quantifiedCount;};
+document.getElementById("dl").onclick=function(){var md=L.buildReport(document.getElementById("resume").value,document.getElementById("jd").value);var a=document.createElement("a");a.href=URL.createObjectURL(new Blob([md],{type:"text/markdown"}));a.download="resume-match-report.md";a.click();};
+</script></main><footer>Built by Amir Hussain, operations manager and founder of <a href="https://aamirtechs.com" target="_blank" rel="noopener">AamirTechs: operations, customer support and e-commerce services</a>.<br><a href="https://github.com/aamirtechs" target="_blank" rel="noopener">More open source tools on GitHub</a></footer></body></html>
